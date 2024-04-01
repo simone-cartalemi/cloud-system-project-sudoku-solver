@@ -1,9 +1,7 @@
 #include "config.h"
 #include "matrix.cpp"
-#include "monitor.cpp"
 #include "functions.cpp"
-#include "tabu_sudoku.cpp"
-#include "genetic_sudoku.cpp"
+#include "tabu_solver.cpp"
 
 #include <iostream>
 #include <fstream>
