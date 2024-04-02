@@ -142,4 +142,13 @@ class Matrix{
 				cout << endl;
 			}
 		}
+		string outMatrix() {
+			string output = "";
+			for (int i = 0; i < N; ++i) {
+				for (int j = 0; j < N; ++j) {
+					output += to_string(matrix[i][j]) + " ";
+				}
+			}
+			return output;
+		}
 };

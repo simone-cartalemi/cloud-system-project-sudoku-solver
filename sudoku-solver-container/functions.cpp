@@ -1,7 +1,6 @@
 #include "config.h"
 
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include <string>
 #include <ctime>
@@ -9,31 +8,20 @@
 using namespace std;
 
 
-Matrix* readSudokuFromFile(string filename) {
+Matrix* readSudokuFromInput(char* argv[]) {
 	int sudoku[N][N];
 	bool places[N][N] = {false};
 
-	ifstream file(filename);
-	if (!file.is_open()) {
-		cerr << "Errore nell'apertura del file CSV." << endl;
-		return NULL;
-	}
-
-	string line;
+	int numeri_index = 1;
 	for (int i = 0; i < N; ++i) {
-		file >> line;
-		istringstream iss(line);
-		string value;
 		for (int j = 0; j < N; ++j) {
-			getline(iss, value, ',');
-			sudoku[i][j] = atoi(value.c_str());
+			sudoku[i][j] = stoi(argv[numeri_index++]);
 			if (sudoku[i][j] == 0) {
 				places[i][j] = true;
 			}
 		}
 	}
 
-	file.close();
 	Matrix* out = new Matrix(sudoku, places);
 	return out;
 }

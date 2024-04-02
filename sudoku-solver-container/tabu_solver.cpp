@@ -19,11 +19,9 @@ void getNeighbors(const Matrix &original, Matrix* neighbors[], list<int*>** inde
 	}
 }
 
-Matrix* tabuSearch(Monitor &M, const string file_csv, int iterations = 1000, int m = 200, int tabuSize = 500) {
-	// Matrice del Sudoku, elementi fissi e soluzione
-	Matrix* sudoku = readSudokuFromFile(file_csv);
+bool tabuSearch(Matrix* sudoku, int iterations = 1000, int m = 200, int tabuSize = 500) {
 	if (!sudoku) {
-		return NULL;
+		return false;
 	}
 	Matrix* bestSolution = randomInitialization(sudoku);
 	int bestFitness = bestSolution->getFitness();
@@ -45,7 +43,6 @@ Matrix* tabuSearch(Monitor &M, const string file_csv, int iterations = 1000, int
 	
 	int itera = 0;
 	while(bestFitness > 0 && itera < iterations) {
-		auto clock = M.setStart();
 		getNeighbors(*bestCandidate, neighbors, indexes, m);
 		int bestCandidateFitness = INT_MAX;
 		
@@ -69,19 +66,18 @@ Matrix* tabuSearch(Monitor &M, const string file_csv, int iterations = 1000, int
 		if (bestCandidateFitness < bestFitness) {
 			bestSolution->copyFrom(*bestCandidate);
 			bestFitness = bestCandidateFitness;
-			//cout << "Iterazione " << itera + 1 << "\tFitness: " << bestCandidateFitness << "\t---> New best!\n";
+			cout << "Iterazione " << itera + 1 << "\tFitness: " << bestCandidateFitness << "\t---> New best!\n";
 		}
 		else if ((itera + 1) % 100 == 0) {
-			//cout << "Iterazione " << itera + 1 << "\tFitness: " << bestFitness << "\t\n";
+			cout << "Iterazione " << itera + 1 << "\tFitness: " << bestFitness << "\t\n";
 		}
 		
 		itera++;
-		M.setStop(bestFitness, clock);
 	}
 
 	// Stampa la matrice del Sudoku
-	//cout << "\nSoluzione finale del Sudoku:\nFitness = " << bestFitness << " dopo " << itera << " iterazioni\n";
-	//bestSolution->print();
+	cout << "\nSoluzione finale del Sudoku:\nFitness = " << bestFitness << " dopo " << itera << " iterazioni\n";
+	bestSolution->print();
 
 	// Dealloca la memoria
 	for (int i = 0; i < m; ++i) {
@@ -89,7 +85,7 @@ Matrix* tabuSearch(Monitor &M, const string file_csv, int iterations = 1000, int
 		delete indexes[i];
 	}
 	delete bestCandidate;
-	delete sudoku;
 	
-	return bestSolution;
+	sudoku->copyFrom(*bestSolution);
+	return true;
 }
