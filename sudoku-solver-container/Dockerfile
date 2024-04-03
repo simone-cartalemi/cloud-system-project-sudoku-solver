@@ -6,4 +6,4 @@ WORKDIR /usr/src
 
 RUN gcc -lstdc++ main.cpp -o solver
 
-ENTRYPOINT ["/usr/src/solver"]
+ENTRYPOINT ["/usr/src/run.sh"]
