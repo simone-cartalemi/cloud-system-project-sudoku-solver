@@ -8,14 +8,17 @@
 using namespace std;
 
 
-Matrix* readSudokuFromInput(char* argv[]) {
+Matrix* readSudokuFromInput(string matrix) {
 	int sudoku[N][N];
 	bool places[N][N] = {false};
 
-	int numeri_index = 1;
+	stringstream ss(matrix.substr(1, matrix.size() - 2));	// remove '[' and ']' and put it in a stream
+
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			sudoku[i][j] = stoi(argv[numeri_index++]);
+			string number = "0";
+			getline(ss, number, ',');
+			sudoku[i][j] = stoi(number);
 			if (sudoku[i][j] == 0) {
 				places[i][j] = true;
 			}

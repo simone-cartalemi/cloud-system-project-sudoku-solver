@@ -16,13 +16,13 @@ string resultsPath = "results/";
 
 int main(int argc, char* argv[]) {
 	// Verifica i parametri di input
-    if (argc != N * N + 1) {
-        cerr << "Usage: " << argv[0] << " <" << N * N << " numeri>" << endl;
+    if (argc != 2) {
+        cerr << "Usage: " << argv[0] << " [MATRIX]" << endl;
         return 1;
     }
 
 	// Matrice del Sudoku in input
-	Matrix* sudoku = readSudokuFromInput(argv);
+	Matrix* sudoku = readSudokuFromInput(argv[1]);
 
 	tabuSearch(sudoku, maxIterations, tabMs);
 
