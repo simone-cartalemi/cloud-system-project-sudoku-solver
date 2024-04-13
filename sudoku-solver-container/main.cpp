@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 		cerr << "Errore nella creazione del file di output\n";
 		return false;
 	}
-	fileOut << sudoku->outMatrix();
+	fileOut << "[" << sudoku->outMatrix() << "]";
 	fileOut.close();
 
 	cout << "\n\nProcess ended\n";
