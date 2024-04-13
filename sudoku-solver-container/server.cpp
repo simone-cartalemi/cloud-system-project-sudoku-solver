@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <cstdio>
 #include <sys/socket.h>
@@ -10,6 +9,7 @@
 using namespace std;
 
 const int PORT = 3264;
+const int BUFFER_SIZE = 1024;
 
 
 int createSocket() {
@@ -71,33 +71,26 @@ int runSolver(char* matrix) {
 }
 
 int sendResult(const string filePath, const int clientSocket) {
-	// Invia la dimensione del file
-	ifstream file(filePath, ios::binary);
-	file.seekg(0, ios::end);
-	size_t fileSize = file.tellg();
-	file.seekg(0, ios::beg);
-
-	stringstream ss;
-	ss << fileSize;
-	string fileSizeStr = ss.str();
-	if (send(clientSocket, fileSizeStr.c_str(), fileSizeStr.length(), 0) == -1) {
-		cerr << "Errore nell'invio della dimensione del file al client" << endl;
-		return -1;
-	}
-
-	// Invia i dati del file al client
+	FILE *fd = fopen(filePath.c_str(), "rb");
+	size_t rret, wret;
 	char buffer[1024];
-	while (!file.eof()) {
-		file.read(buffer, sizeof(buffer));
-		ssize_t bytesSent = send(clientSocket, buffer, file.gcount(), 0);
-		if (bytesSent == -1) {
-			cerr << "Errore nell'invio della soluzione al client" << endl;
-			return -1;
+	int bytes_read;
+	int bytes_sended = 0;
+	while (!feof(fd)) {
+		if ((bytes_read = fread(buffer, 1, BUFFER_SIZE, fd)) > 0) {
+			send(clientSocket, buffer, bytes_read, 0);
+			bytes_sended += bytes_read;
+		}
+		else {
+			break;
 		}
 	}
-
-	// Chiudi file
-	file.close();
+	fclose(fd);
+	if (!bytes_sended) {
+		cerr << "Soluzione non inviata" << endl;
+		return -1;
+	}
+	
 	return 0;
 }
 
@@ -107,9 +100,9 @@ int main() {
 	
 	// Crea Socket e mettila in ascolto
 	int serverSocket = createSocket();
-    if (serverSocket == -1) {
-        return 1;
-    }
+	if (serverSocket == -1) {
+		return 1;
+	}
 	if(listenSocket(serverSocket)) {
 		return 1;
 	}
