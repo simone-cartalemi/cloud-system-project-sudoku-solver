@@ -5,4 +5,4 @@ if [ ! -d "results" ]; then
     mkdir -p results
 fi
 
-./solver $@
+./server
