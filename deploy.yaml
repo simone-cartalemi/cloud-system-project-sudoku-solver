@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solver-pod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multi-solver-app
+  template:
+    metadata:
+      labels:
+        app: multi-solver-app
+    spec:
+      containers:
+      - name: solver
+        image: sudoku-solver:0.4
+        command: []
+        ports:
+        - containerPort: 3264
+          name: solver-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solver-pod-service
+spec:
+  selector:
+    app: multi-solver-app
+  ports:
+    - protocol: TCP
+      port: 3264
+      targetPort: solver-port
+  type: LoadBalancer
