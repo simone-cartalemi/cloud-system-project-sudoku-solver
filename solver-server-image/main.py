@@ -1,48 +1,40 @@
 import socket
-import subprocess
-import concurrent.futures
 
-# Funzione per gestire una singola connessione client
-def handle_client_connection(client_socket):
-    # Ricevi il comando dal client
-    command = client_socket.recv(1024).decode().strip()
-    
-    # Esegui il comando bash per scaricare il file
+def send_command_and_receive_file(host, port, command):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     try:
-        output = subprocess.check_output(command, shell=True)
-        # Invia il contenuto del file al client
-        client_socket.sendall(output)
-    except subprocess.CalledProcessError as e:
-        # Se il comando non è riuscito, invia un messaggio di errore al client
-        client_socket.sendall(b"Errore durante l'esecuzione del comando")
+        sock.connect((host, port))
+        sock.sendall(command.encode() + b'\n')
+        
+        # Ricevi la dimensione del file dal server
+        file_size = 1024
+        
+        # Ricevi file dal server
+        received_data = b''
+        while len(received_data) < file_size:
+            data = sock.recv(1024)
+            if not data:
+                break
+            received_data += data
+        
+        # Salva il file ricevuto
+        with open('results/output_file_from_container.txt', 'wb') as f:
+            f.write(received_data)
+            print("File salvato come 'output_file'")
 
-    # Chiudi la connessione con il client
-    client_socket.close()
+    finally:
+        sock.close()
 
-# Funzione principale del server
+
 def main():
-    # Configurazione del server
-    host = '127.0.0.1'
-    port = 8080
-
-    # Crea un socket TCP/IP
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-        # Bind del socket all'indirizzo e alla porta
-        server_socket.bind((host, port))
-
-        # Metti il socket in modalità ascolto
-        server_socket.listen(5)
-        print(f'Server in ascolto su {host}:{port}...')
-
-        # Accetta connessioni e gestiscile in modo concorrente
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            while True:
-                # Accetta una nuova connessione
-                client_socket, client_address = server_socket.accept()
-                print(f'Connessione accettata da {client_address}')
-
-                # Avvia un thread per gestire la connessione client
-                executor.submit(handle_client_connection, client_socket)
+    print("OK CI SIAMO\n\n\n\n\n")
+    m = "[8,0,0,3,0,5,0,4,2,2,6,0,7,0,9,0,3,0,1,0,3,4,2,6,9,0,8,0,2,0,0,5,0,8,0,7,0,3,0,9,7,0,0,1,0,7,8,9,0,0,2,3,6,5,6,0,5,0,0,7,1,0,0,0,7,0,2,3,0,0,5,0,0,1,2,0,6,0,7,8,9]"
+    worker_service_url = "multi-solver-service"
+    ip_solver = socket.gethostbyname(worker_service_url)
+    response = send_command_and_receive_file(ip_solver, 3264, m)
+    print(response)
+    
 
 # Avvio del server
 if __name__ == "__main__":
