@@ -107,36 +107,41 @@ int main() {
 		return 1;
 	}
 	
-	// Accetta una connessione in ingresso
-	int clientSocket = acceptConnection(serverSocket);
-	if (clientSocket == -1) {
-		close(serverSocket);
-		return 1;
-	}
+	// Svolgi le funzioni da server
+	while (true) {
+		// Accetta una connessione in ingresso
+		int clientSocket = acceptConnection(serverSocket);
+		if (clientSocket == -1) {
+			close(serverSocket);
+			return 1;
+		}
 
-	// Ricevi la matrice
-	char buffer[1024];
-	int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-	if (bytesReceived <= 0) {
-		cerr << "Errore nella ricezione della matrice" << endl;
-		close(clientSocket);
-		close(serverSocket);
-		return 1;
-	}
-	buffer[bytesReceived] = '\0';
+		// Ricevi la matrice
+		char buffer[1024];
+		int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
+		if (bytesReceived <= 0) {
+			cerr << "Errore nella ricezione della matrice" << endl;
+			close(clientSocket);
+			close(serverSocket);
+			return 1;
+		}
+		buffer[bytesReceived] = '\0';
 
-	// Esegui risolutore
-	if (runSolver(buffer)) {
+		// Esegui risolutore
+		if (runSolver(buffer)) {
+			close(clientSocket);
+			close(serverSocket);
+			return 1;
+		}
+		
+		// Invia il risultato
+		sendResult("results/solution.txt", clientSocket);
+		
+		// Chiudi la connessione col client
 		close(clientSocket);
-		close(serverSocket);
-		return 1;
 	}
-	
-	// Invia il risultato
-	sendResult("results/solution.txt", clientSocket);
 
 	// Chiudi connessione
-	close(clientSocket);
 	close(serverSocket);
 
 	return 0;

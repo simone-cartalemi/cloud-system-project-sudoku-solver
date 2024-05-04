@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: solver
-        image: sudoku-solver:0.5
+        image: sudoku-solver:0.6
         ports:
         - containerPort: 3264
           name: solver-port

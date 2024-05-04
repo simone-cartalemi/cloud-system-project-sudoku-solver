@@ -40,12 +40,12 @@ docker build -t gcc-alpine:1.1 ./gcc-alpine-image/
 ```
 2. Immagine del risolutore
 ```bash
-docker build -t sudoku-solver:0.4 ./sudoku-solver-image/
+docker build -t sudoku-solver:0.6 ./sudoku-solver-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
 ```bash
-docker run -it --name server -p 3264:3264 sudoku-solver:0.4
+docker run -it --name server -p 3264:3264 sudoku-solver:0.6
 ```
 
 #### Distribuzione su Kubernetes
