@@ -1,9 +1,9 @@
 const address = "localhost";
-const port = 3264;
+const port = 8080;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 
-	const inputMatrix = document.getElementById('matrix').value;
+	const inputMatrix = document.getElementById('matrix');
 	const send = document.getElementById('send');
 	const responses = document.getElementById('responses');
 	const outp = (message) => {
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		socket.addEventListener("message", (data) => {
 			console.log('Messaggio:', data);
-			outp("Risultato: " + data);
-			fun(data);
+			outp("Risultato: " + data.data);
+			fun(data.data);
 		});
 		socket.addEventListener("close", () => {
 			console.log('Connessione chiusa');
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		const sock = connect(address, port, matrix, (response) => {
 			outp(response);
 		});
-		sock.send("CIAO")
+		//sock.send("CIAO")
 		outp("Loading...");
 	});
 
