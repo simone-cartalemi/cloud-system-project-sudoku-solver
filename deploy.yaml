@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: solver-deployment
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: multi-solver-deployment
@@ -30,6 +30,7 @@ spec:
     - protocol: TCP
       port: 3264
       targetPort: 3264
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
