@@ -74,8 +74,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	};
 
 	loadTextMatrix.addEventListener('click', () => {
+		let matrix;
+		try {
+			matrix = JSON.parse(inputTextMatrix.value);
+		} catch (e) {
+			console.error('La stringa non è valida');
+			return;
+		}
+		if (matrix.length != 81) {
+			console.error('Devi inserire 81 elementi');
+			return;
+		}
 		resetMatrix();
-		const matrix = JSON.parse(inputTextMatrix.value);
 
 		let index = 0;
 		cellsMatrix.forEach(cell => {
