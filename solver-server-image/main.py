@@ -5,6 +5,7 @@ import threading
 
 SERVER_PORT = 3264
 SOLVER_PORT = 1632
+WORKER_URL = "multi-solver-service"
 
 
 def check_matrix(matrix):
@@ -47,24 +48,27 @@ async def handle_client(websocket, path):
     async for message in websocket:
         threading.Thread(target=process, args=(websocket, message)).start()
 
-def process(websocket, matrix):
-    asyncio.run(solve_sudoku(websocket, matrix))
+def process(websocket, message):
+    asyncio.run(solve_sudoku(websocket, message))
 
 async def solve_sudoku(websocket, matrix):
-    # Controlla il formato
+    # Controlla il formato della matrice di input
     if not check_matrix(matrix):
-        await websocket.send("Wrong format")
+        await websocket.send("Wrong format. Using: [81 numbers between 0 and 9]")
+        return
 
     # Ottieni l'indirizzo del solver e risolvi
     print(f"Input matrix: {matrix}")
-    worker_service_url = "multi-solver-service"
-    ip_solver = socket.gethostbyname(worker_service_url)
-    print(ip_solver)
+    ip_solver = socket.gethostbyname(WORKER_URL)
+    print("Solving at", ip_solver)
     solution = solve_matrix(ip_solver, matrix)
     
+    if solution == None:
+        return
+    
     # Invia la soluzione al client
-    if solution != None:
-        await websocket.send(solution)
+    print(f"Output matrix: {solution}")
+    await websocket.send(solution)
 
 
 async def main():
@@ -77,8 +81,4 @@ async def main():
 
 # Avvio del server
 if __name__ == "__main__":
-    print("Tentativo")
-    worker_service_url = "multi-solver-service"
-    ip_solver = socket.gethostbyname(worker_service_url)
-    print(ip_solver)
     asyncio.run(main())
