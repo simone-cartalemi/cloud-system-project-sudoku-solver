@@ -1,4 +1,80 @@
+:root {
+    --blue: #1e90ff;
+    --white: #ffffff;
+    --black: #111111;
+    --default-font: "Segoe UI", Arial, sans-serif;
+  }
+
 html, body {
     margin: 0;
     padding: 0;
+}
+
+.header {
+    text-align: center;
+    background: var(--blue);
+    padding: 2rem;
+}
+
+h4 {
+    margin: 0;
+    color: var(--white);
+    font-size: xx-large;
+    font-family: var(--default-font);
+}
+
+.wrap {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+input[type=text] {
+    border-radius: 1rem;
+    font-size: large;
+    padding: .7rem;
+    font-family: var(--default-font);
+    width: 40%;
+    outline: none;
+    border: 2px solid var(--black);
+}
+
+input[type=button] {
+    color: var(--white);
+    background: var(--blue);
+    border: .1rem solid var(--white);
+    border-radius: 1rem;
+    font-size: large;
+    padding: .7rem;
+    font-family: var(--default-font);
+    cursor: pointer;
+    transition: all .5s;
+}
+
+input[type=button]:hover {
+    background: var(--white);
+    color: var(--blue);
+    border: .1rem solid var(--blue);
+}
+
+
+table {
+    margin:1em auto;
+}
+td {
+    height:30px;
+    width:30px;
+    border:1px solid;
+    text-align:center;
+}
+td:first-child {
+    border-left:solid;
+}
+td:nth-child(3n) {
+    border-right:solid ;
+}
+tr:first-child {
+    border-top:solid;
+}
+tr:nth-child(3n) td {
+    border-bottom:solid ;
 }
