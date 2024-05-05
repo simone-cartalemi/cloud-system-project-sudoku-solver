@@ -4,7 +4,7 @@ const port = 3264;
 document.addEventListener("DOMContentLoaded", (event) => {
 
 	const inputMatrix = document.getElementById('matrix');
-	const send = document.getElementById('send');
+	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
 	const outp = (message) => {
 		responses.innerHTML += "<p>" + message + "</p>";
@@ -19,8 +19,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		socket.addEventListener("message", (data) => {
 			console.log('Messaggio:', data);
-			outp("Risultato: " + data.data);
-			fun(data.data);
+			if (data.data instanceof Blob) {
+				res = data.data.text().then(fun);
+			}
+			else {
+				res = data.data;
+			}
+			outp("Risultato: " + res);
+			fun(res);
+			socket.close();
 		});
 		socket.addEventListener("close", () => {
 			console.log('Connessione chiusa');
@@ -35,12 +42,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 
 
-	send.addEventListener('click', () => {
+	solve.addEventListener('click', () => {
 		matrix = inputMatrix.value;
 		const sock = connect(address, port, matrix, (response) => {
 			outp(response);
 		});
-		//sock.send("CIAO")
 		outp("Loading...");
 	});
 
