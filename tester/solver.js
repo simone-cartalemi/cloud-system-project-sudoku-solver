@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		cells.forEach(cell => {
 			const n = parseInt(cell.innerHTML);
 			if (n >= 1 && n <= 9) {
-				array.push(parseInt(n));
+				array.push(n);
 			}
 			else {
 				array.push(0);
@@ -25,12 +25,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 	
 	const fillMatrix = (array) => {
-		const cells = row.querySelectorAll('td');
+		const matrix = JSON.parse(array);
+		let index = 0;
+		const cells = tableMatrix.querySelectorAll('td');
 		cells.forEach(cell => {
-			const n = array[index++];
+			const n = matrix[index++];
 			if (!cell.classList.contains("fixed")) {
 				cell.innerHTML = n;
 			}
+		});
+	}
+
+	const resetMatrix = () => {
+		const cells = tableMatrix.querySelectorAll('td');
+		cells.forEach(cell => {
+			cell.classList.remove("fixed")
+			cell.innerHTML = "";
 		});
 	}
 
@@ -67,6 +77,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	};
 
 	loadTextMatrix.addEventListener('click', () => {
+		resetMatrix();
 		const matrix = JSON.parse(inputTextMatrix.value);
 
 		const rows = tableMatrix.querySelectorAll('tr');
