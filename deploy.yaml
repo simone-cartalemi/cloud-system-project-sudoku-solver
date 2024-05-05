@@ -30,7 +30,6 @@ spec:
     - protocol: TCP
       port: 1632
       targetPort: 1632
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,3 +60,4 @@ spec:
     - protocol: TCP
       port: 3264
       targetPort: 3264
+  type: LoadBalancer
