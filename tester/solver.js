@@ -7,6 +7,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const loadTextMatrix = document.getElementById('load');
 	const tableMatrix = document.getElementById('table-matrix');
 
+	const readMatrix = () => {
+		array = [];
+		const cells = tableMatrix.querySelectorAll('td');
+		cells.forEach(cell => {
+			const n = parseInt(cell.innerHTML);
+			if (n >= 1 && n <= 9) {
+				array.push(parseInt(n));
+			}
+			else {
+				array.push(0);
+			}
+		});
+		return array;
+	}
+
 	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
 	const outp = (message) => {
@@ -44,7 +59,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	};
 
 	loadTextMatrix.addEventListener('click', () => {
-		console.log(typeof tableMatrix);
 		const matrix = JSON.parse(inputTextMatrix.value);
 
 		const rows = tableMatrix.querySelectorAll('tr');
@@ -63,7 +77,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 
 	solve.addEventListener('click', () => {
-		matrix = inputTextMatrix.value;
+		matrix = JSON.stringify(readMatrix());
 		const sock = connect(address, port, matrix, (response) => {
 			outp(response);
 		});
