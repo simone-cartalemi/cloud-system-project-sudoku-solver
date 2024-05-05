@@ -70,7 +70,7 @@ async def solve_sudoku(websocket, message):
     await websocket.send(response)
 
 async def main():
-    async with websockets.serve(handle_client, "localhost", 8080):
+    async with websockets.serve(handle_client, "localhost", 3264):
         print("WebSocket server is running...")
         
         await asyncio.Future()

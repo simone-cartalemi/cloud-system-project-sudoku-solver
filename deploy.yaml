@@ -16,7 +16,7 @@ spec:
       - name: solver
         image: sudoku-solver:0.6
         ports:
-        - containerPort: 3264
+        - containerPort: 1632
           name: solver-port
 ---
 apiVersion: v1
@@ -28,8 +28,8 @@ spec:
     app: multi-solver-deployment
   ports:
     - protocol: TCP
-      port: 3264
-      targetPort: 3264
+      port: 1632
+      targetPort: 1632
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -59,5 +59,5 @@ spec:
     app: server
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 3264
+      targetPort: 3264

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int PORT = 3264;
+const int PORT = 1632;
 const int BUFFER_SIZE = 1024;
 
 
