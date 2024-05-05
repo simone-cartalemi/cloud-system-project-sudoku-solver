@@ -32,8 +32,8 @@ Il progetto è stato configurato per funzionare esclusivamente su sistemi operat
 - Kubernetes (Minikube o un cluster configurato)
 - kubectl configurato per comunicare con il tuo cluster Kubernetes
 
-#### Costruzione dell'Immagine Docker
-Bisogna fare la build di due immagini:
+#### Costruzione delle immagini Docker
+Bisogna fare la build di tre immagini, di cui due per il risolutore e una per il server:
 1. Immagine di **Linux Alpine**
 ```bash
 docker build -t gcc-alpine:1.1 ./gcc-alpine-image/
@@ -45,7 +45,17 @@ docker build -t sudoku-solver:0.6 ./sudoku-solver-image/
 
 Per testare eventualmente l'immagine eseguire il comando
 ```bash
-docker run -it --name server -p 1632:1632 sudoku-solver:0.6
+docker run -it --name solver -p 1632:1632 sudoku-solver:0.6
+```
+
+3. Immagine del server:
+```bash
+docker build -t solver-server:v1.0 .\solver-server-image\
+```
+
+Per testare eventualmente l'immagine eseguire il comando
+```bash
+docker run -it --name server -p 3264:3264 solver-server:v1.0
 ```
 
 #### Distribuzione su Kubernetes
