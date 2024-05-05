@@ -7,4 +7,4 @@ WORKDIR /usr/src
 RUN mkdir -p results
 RUN pip install websockets
 
-ENTRYPOINT ["python", "/usr/src/main.py"]
+ENTRYPOINT ["python", "-u", "/usr/src/main.py"]
