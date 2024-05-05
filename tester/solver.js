@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const inputTextMatrix = document.getElementById('matrix');
 	const loadTextMatrix = document.getElementById('load');
 	const tableMatrix = document.getElementById('table-matrix');
+	const solve = document.getElementById('solve');
+	const responses = document.getElementById('responses');
 
 	const readMatrix = () => {
 		array = [];
@@ -21,14 +23,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		return array;
 	}
+	
+	const fillMatrix = (array) => {
+		const cells = row.querySelectorAll('td');
+		cells.forEach(cell => {
+			const n = array[index++];
+			if (!cell.classList.contains("fixed")) {
+				cell.innerHTML = n;
+			}
+		});
+	}
 
-	const solve = document.getElementById('solve');
-	const responses = document.getElementById('responses');
 	const outp = (message) => {
 		responses.innerHTML += "<p>" + message + "</p>";
 	}
 
-	const connect = (_address, _port, data, fun) => {
+	const connect = (_address, _port, data) => {
 		socket = new WebSocket("ws:" + _address + ":" + _port);
 		socket.addEventListener("open", () => {
 			console.log('Connesso al server');
@@ -38,13 +48,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		socket.addEventListener("message", (data) => {
 			console.log('Messaggio:', data);
 			if (data.data instanceof Blob) {
-				res = data.data.text().then(fun);
+				res = data.data.text().then(fillMatrix);
 			}
 			else {
 				res = data.data;
 			}
-			outp("Risultato: " + res);
-			fun(res);
 			socket.close();
 		});
 		socket.addEventListener("close", () => {
@@ -78,9 +86,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	solve.addEventListener('click', () => {
 		matrix = JSON.stringify(readMatrix());
-		const sock = connect(address, port, matrix, (response) => {
-			outp(response);
-		});
+		const sock = connect(address, port, matrix);
 		outp("Loading...");
 	});
 
