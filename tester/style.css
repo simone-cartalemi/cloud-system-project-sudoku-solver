@@ -2,6 +2,8 @@
     --blue: #1e90ff;
     --white: #ffffff;
     --black: #111111;
+    --fixed-element: #029;
+    --variable-element: #333;
     --default-font: "Segoe UI", Arial, sans-serif;
   }
 
@@ -56,25 +58,40 @@ input[type=button]:hover {
     border: .1rem solid var(--blue);
 }
 
+input[type=number] {
+    font-family: var(--default-font);
+
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    outline: none;
+    border: none;
+}
+
 
 table {
     margin:1em auto;
+    font-family: var(--default-font);
 }
 td {
-    height:30px;
-    width:30px;
-    border:1px solid;
-    text-align:center;
+    height: 30px;
+    width: 30px;
+    color: var(--variable-element);
+    border: 1px solid var(--black);
+    text-align: center;
 }
 td:first-child {
-    border-left:solid;
+    border-left: solid var(--black);
 }
 td:nth-child(3n) {
-    border-right:solid ;
+    border-right: solid var(--black);
 }
 tr:first-child {
-    border-top:solid;
+    border-top: solid var(--black);
 }
 tr:nth-child(3n) td {
-    border-bottom:solid ;
+    border-bottom: solid var(--black);
+}
+.fixed {
+    color: var(--fixed-element);
 }

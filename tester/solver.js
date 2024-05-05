@@ -3,7 +3,10 @@ const port = 3264;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 
-	const inputMatrix = document.getElementById('matrix');
+	const inputTextMatrix = document.getElementById('matrix');
+	const loadTextMatrix = document.getElementById('load');
+	const tableMatrix = document.getElementById('table-matrix');
+
 	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
 	const outp = (message) => {
@@ -39,11 +42,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		return socket;
 	};
-	
+
+	loadTextMatrix.addEventListener('click', () => {
+		console.log(typeof tableMatrix);
+		const matrix = JSON.parse(inputTextMatrix.value);
+
+		const rows = tableMatrix.querySelectorAll('tr');
+		let index = 0;
+		rows.forEach(row => {
+			const cells = row.querySelectorAll('td');
+			cells.forEach(cell => {
+				const n = matrix[index++];
+				if (n) {
+					cell.innerHTML = n;
+					cell.classList.add("fixed");
+				}
+			});
+		});
+	});
 
 
 	solve.addEventListener('click', () => {
-		matrix = inputMatrix.value;
+		matrix = inputTextMatrix.value;
 		const sock = connect(address, port, matrix, (response) => {
 			outp(response);
 		});
