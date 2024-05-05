@@ -5,14 +5,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	const inputTextMatrix = document.getElementById('matrix');
 	const loadTextMatrix = document.getElementById('load');
-	const tableMatrix = document.getElementById('table-matrix');
+	const cellsMatrix = document.getElementById('table-matrix').querySelectorAll('td');
 	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
 
 	const readMatrix = () => {
 		array = [];
-		const cells = tableMatrix.querySelectorAll('td');
-		cells.forEach(cell => {
+		cellsMatrix.forEach(cell => {
 			const n = parseInt(cell.innerHTML);
 			if (n >= 1 && n <= 9) {
 				array.push(n);
@@ -27,8 +26,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const fillMatrix = (array) => {
 		const matrix = JSON.parse(array);
 		let index = 0;
-		const cells = tableMatrix.querySelectorAll('td');
-		cells.forEach(cell => {
+		cellsMatrix.forEach(cell => {
 			const n = matrix[index++];
 			if (!cell.classList.contains("fixed")) {
 				cell.innerHTML = n;
@@ -37,8 +35,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	const resetMatrix = () => {
-		const cells = tableMatrix.querySelectorAll('td');
-		cells.forEach(cell => {
+		cellsMatrix.forEach(cell => {
 			cell.classList.remove("fixed")
 			cell.innerHTML = "";
 		});
@@ -80,17 +77,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		resetMatrix();
 		const matrix = JSON.parse(inputTextMatrix.value);
 
-		const rows = tableMatrix.querySelectorAll('tr');
 		let index = 0;
-		rows.forEach(row => {
-			const cells = row.querySelectorAll('td');
-			cells.forEach(cell => {
-				const n = matrix[index++];
-				if (n) {
-					cell.innerHTML = n;
-					cell.classList.add("fixed");
-				}
-			});
+		cellsMatrix.forEach(cell => {
+			const n = matrix[index++];
+			if (n) {
+				cell.innerHTML = n;
+				cell.classList.add("fixed");
+			}
 		});
 	});
 
