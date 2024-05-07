@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const cellsMatrix = document.getElementById('table-matrix').querySelectorAll('td');
 	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
+	const loading = document.getElementById('loading');
+
+	const freeze = () => {
+		loading.classList.remove('invisible');
+		solve.classList.add('invisible');
+	}
+
+	const unfreeze = () => {
+		loading.classList.add('invisible');
+		solve.classList.remove('invisible');
+	}
 
 	const readMatrix = () => {
 		array = [];
@@ -32,6 +43,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cell.innerHTML = n;
 			}
 		});
+		unfreeze();
 	}
 
 	const resetMatrix = () => {
@@ -49,7 +61,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		socket = new WebSocket("ws:" + _address + ":" + _port);
 		socket.addEventListener("open", () => {
 			console.log('Connesso al server');
-			outp("Ok");
 			socket.send(data);
 		});
 		socket.addEventListener("message", (data) => {
@@ -64,11 +75,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		socket.addEventListener("close", () => {
 			console.log('Connessione chiusa');
-			outp("Closed");
 		});
 		socket.addEventListener("error", (error) => {
 			console.error('Errore durante la connessione al server: ', error);
 			outp("Error");
+			unfreeze();
 		});
 		return socket;
 	};
@@ -99,9 +110,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 
 	solve.addEventListener('click', () => {
+		freeze();
 		matrix = JSON.stringify(readMatrix());
 		const sock = connect(address, port, matrix);
-		outp("Loading...");
 	});
 
 
