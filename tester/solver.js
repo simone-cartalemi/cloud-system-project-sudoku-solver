@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 
 	
-	const showResponses = (message) => {
-		responses.innerHTML = "<p>" + message + "</p>";
+	const showResponses = (message, optionalClass = "") => {
+		responses.innerHTML = "<p" + ((optionalClass != "")? " class='" + optionalClass +  "'" : "") + ">" + message + "</p>";
 	}
 
 	const freeze = () => {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		});
 		unfreeze();
-		showResponses("Ecco la soluzione!")
+		showResponses("Ecco la soluzione!", 'right')
 	}
 
 	const resetMatrix = () => {
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		socket.addEventListener("error", (error) => {
 			console.error('Errore durante la connessione al server: ', error);
 			unfreeze();
-			showResponses("Si è verificato un errore");
+			showResponses("Si è verificato un errore", 'wrong');
 		});
 		return socket;
 	};
@@ -103,12 +103,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			matrix = JSON.parse(inputTextMatrix.value);
 		} catch (e) {
 			console.error('La stringa non è valida');
-			showResponses("La stringa non è valida");
+			showResponses("La stringa non è valida", 'wrong');
 			return;
 		}
 		if (matrix.length != 81) {
 			console.error('Devi inserire 81 elementi');
-			showResponses("Devi inserire 81 elementi: [n1,n2,n3,..., n81]");
+			showResponses("Devi inserire 81 elementi: [n1,n2,n3,..., n81]", 'wrong');
 			return;
 		}
 		resetMatrix();
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cell.classList.add("fixed");
 			}
 		});
-		showResponses("Matrice caricata con successo!")
+		showResponses("Matrice caricata con successo!", 'right')
 	});
 
 	solve.addEventListener('click', () => {

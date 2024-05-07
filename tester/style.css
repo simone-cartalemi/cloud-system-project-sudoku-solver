@@ -1,11 +1,13 @@
 :root {
+    --red: #de0000;
+    --green: #29bf00;
     --blue: #1e90ff;
     --white: #ffffff;
     --black: #111111;
     --fixed-element: #029;
     --variable-element: #333;
     --default-font: "Segoe UI", Arial, sans-serif;
-  }
+}
 
 html, body {
     margin: 0;
@@ -123,4 +125,12 @@ tr:nth-child(3n) td {
 
 .invisible {
     display: none;
+}
+
+.wrong {
+    color: var(--red);
+}
+
+.right {
+    color: var(--green);
 }
