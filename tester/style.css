@@ -31,6 +31,7 @@ h4 {
 
 .wrap {
     text-align: center;
+    font-family: var(--default-font);
     margin-bottom: 2rem;
 }
 

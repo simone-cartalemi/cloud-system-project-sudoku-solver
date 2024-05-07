@@ -13,9 +13,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const responses = document.getElementById('responses');
 	const loading = document.getElementById('loading');
 
+
+	
+	const showResponses = (message) => {
+		responses.innerHTML = "<p>" + message + "</p>";
+	}
+
 	const freeze = () => {
 		loading.classList.remove('invisible');
 		solve.classList.add('invisible');
+		showResponses("Attendere...");
 	}
 
 	const unfreeze = () => {
@@ -47,6 +54,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		});
 		unfreeze();
+		showResponses("Ecco la soluzione!")
 	}
 
 	const resetMatrix = () => {
@@ -54,11 +62,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			cell.classList.remove("fixed")
 			cell.innerHTML = "";
 		});
+		showResponses("");
 	}
 
-	const outp = (message) => {
-		responses.innerHTML += "<p>" + message + "</p>";
-	}
 
 	const connect = (_address, _port, data) => {
 		socket = new WebSocket("ws:" + _address + ":" + _port);
@@ -81,8 +87,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		socket.addEventListener("error", (error) => {
 			console.error('Errore durante la connessione al server: ', error);
-			outp("Error");
 			unfreeze();
+			showResponses("Si è verificato un errore");
 		});
 		return socket;
 	};
@@ -97,10 +103,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			matrix = JSON.parse(inputTextMatrix.value);
 		} catch (e) {
 			console.error('La stringa non è valida');
+			showResponses("La stringa non è valida");
 			return;
 		}
 		if (matrix.length != 81) {
 			console.error('Devi inserire 81 elementi');
+			showResponses("Devi inserire 81 elementi: [n1,n2,n3,..., n81]");
 			return;
 		}
 		resetMatrix();
@@ -113,6 +121,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cell.classList.add("fixed");
 			}
 		});
+		showResponses("Matrice caricata con successo!")
 	});
 
 	solve.addEventListener('click', () => {
