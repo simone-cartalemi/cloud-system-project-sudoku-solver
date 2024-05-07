@@ -3,6 +3,9 @@ const port = 3264;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 
+	const showButton = document.getElementById('show');
+	const examples = document.getElementById('examples');
+	
 	const inputTextMatrix = document.getElementById('matrix');
 	const loadTextMatrix = document.getElementById('load');
 	const cellsMatrix = document.getElementById('table-matrix').querySelectorAll('td');
@@ -84,6 +87,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		return socket;
 	};
 
+	showButton.addEventListener('click', () => {
+		examples.classList.remove('invisible');
+	})
+
 	loadTextMatrix.addEventListener('click', () => {
 		let matrix;
 		try {
@@ -108,15 +115,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 	});
 
-
 	solve.addEventListener('click', () => {
 		freeze();
 		matrix = JSON.stringify(readMatrix());
 		const sock = connect(address, port, matrix);
 	});
-
-
-
-
 
 });
