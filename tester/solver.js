@@ -9,11 +9,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const inputTextMatrix = document.getElementById('matrix');
 	const loadTextMatrix = document.getElementById('load');
 	const cellsMatrix = document.getElementById('table-matrix').querySelectorAll('td');
-	const solve = document.getElementById('solve');
 	const responses = document.getElementById('responses');
 	const loading = document.getElementById('loading');
 
-
+	const solve = document.getElementById('solve');
+	const reset = document.getElementById('reset');
 	
 	const showResponses = (message, optionalClass = "") => {
 		responses.innerHTML = "<p" + ((optionalClass != "")? " class='" + optionalClass +  "'" : "") + ">" + message + "</p>";
@@ -22,12 +22,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const freeze = () => {
 		loading.classList.remove('invisible');
 		solve.classList.add('invisible');
+		reset.classList.add('invisible');
 		showResponses("Attendere...");
 	}
 
 	const unfreeze = () => {
 		loading.classList.add('invisible');
 		solve.classList.remove('invisible');
+		reset.classList.remove('invisible');
 	}
 
 	const readMatrix = () => {
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			cell.classList.remove("fixed")
 			cell.innerHTML = "";
 		});
-		showResponses("");
+		showResponses("Scrivi un'istanza e fai click su Risolvi!");
 	}
 
 
@@ -128,6 +130,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		freeze();
 		matrix = JSON.stringify(readMatrix());
 		const sock = connect(address, port, matrix);
+	});
+
+	reset.addEventListener('click', () => {
+		resetMatrix();
 	});
 
 });
