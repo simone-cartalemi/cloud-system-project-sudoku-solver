@@ -1,4 +1,4 @@
-FROM gcc-alpine:1.1
+FROM gcc-alpine:v1.1
 
 COPY . /usr/src
 
