@@ -13,14 +13,16 @@ Il sistema è stato progettato per utilizzare container Docker per incapsulare l
 
 ### Costruzione immagine Docker
 Il sistema è stato configurato per massimizzare l'efficienza e minimizzare l'overhead. L'immagine del risolutore di Sudoku si basa su un'immagine di Alpine Linux personalizzata, integrata con gli strumenti essenziali di *GCC*. L'immagine ufficiale di *GCC*, pur essendo completa, risulta essere troppo pesante per i nostri scopi. La scelta di Alpine Linux permette di mantenere l'immagine finale leggera e veloce, essenziale per un'efficace distribuzione scalabile.\
-Sopra questa immagine base, costruiamo l'immagine contenente il risolutore di Sudoku. Al fine di implementare un'interfaccia, l'immagine include un server che ascolta sulla porta `3264`, pronto per ricevere e risolvere puzzle di Sudoku inviati dai client.
+Sopra questa immagine base, costruiamo l'immagine contenente il risolutore di Sudoku. Al fine di implementare un'interfaccia, l'immagine include un server che ascolta sulla porta `1632`, pronto per ricevere e risolvere puzzle di Sudoku inviati.\
+Un altro container fungerà da server ricevitore, in ascolto sulla porta `3264`, che si occuperà di far eseguire le istanze ai container e mantenere la connessione con i client. L'immagine del server si basa su *Python-Alpine* che è una versione molto leggera dell'interprete di Python. Ogni volta che un client si connette ad esso, avvia un thread e inoltra la soluzione ad un container di risoluzione. Ottenuta quest'ultima si occuperà di reinoltrarla al client.
 
 ### Deploy su Kubernetes
-Kubernetes gioca un ruolo cruciale nella distribuzione e nella gestione del sistema. Utilizzando l'immagine costruita come descritto sopra, Kubernetes istanzia `N` container che rimangono in ascolto sulla porta `3264`. Ogni container esegue una copia indipendente del risolutore, permettendo di processare più richieste in parallelo, in modo da facilitare la scalabilità orizzontale.\
+Kubernetes gioca un ruolo cruciale nella distribuzione e nella gestione del sistema. Utilizzando l'immagine costruita come descritto sopra, Kubernetes istanzia `N` container che rimangono in ascolto e non raggiungibili dall'esterno. Ogni container esegue una copia indipendente del risolutore, permettendo di processare più richieste in parallelo, in modo da facilitare la scalabilità orizzontale.
+Oltre ai risolutori, viene avviato anche l'immagine del server.\
 In base alla domanda, possono essere aggiunti altri container dinamicamente per gestire un carico di lavoro crescente, garantendo così che le risorse siano utilizzate in modo efficiente e che i tempi di risposta rimangano ottimali.
 
 ### Interfaccia di test
-Un semplice script Python stresserà il cluster per verificare le performance.
+Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku.
 
 ---
 
@@ -30,35 +32,47 @@ Il progetto è stato configurato per funzionare esclusivamente su sistemi operat
 #### Prerequisiti
 - Docker
 - Kubernetes (Minikube o un cluster configurato)
-- kubectl configurato per comunicare con il tuo cluster Kubernetes
+- kubectl configurato per comunicare con il cluster Kubernetes
 
-#### Costruzione dell'Immagine Docker
-Bisogna fare la build di due immagini:
+#### Costruzione delle immagini Docker
+Bisogna fare la build di tre immagini, di cui due per il risolutore e una per il server:
 1. Immagine di **Linux Alpine**
 ```bash
-docker build -t gcc-alpine:1.1 ./gcc-alpine-image/
+docker build -t gcc-alpine:v1.1 ./gcc-alpine-image/
 ```
 2. Immagine del risolutore
 ```bash
-docker build -t sudoku-solver:0.4 ./sudoku-solver-image/
+docker build -t sudoku-solver:v1.0 ./sudoku-solver-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
 ```bash
-docker run -it --name server -p 3264:3264 sudoku-solver:0.4
+docker run -it --name solver -p 1632:1632 sudoku-solver:v1.0
+```
+
+3. Immagine del server:
+```bash
+docker build -t solver-server:v1.0 .\solver-server-image\
+```
+
+Per testare eventualmente l'immagine eseguire il comando
+```bash
+docker run -it --name server -p 3264:3264 solver-server:v1.0
 ```
 
 #### Distribuzione su Kubernetes
 
-Per avviare il cluster saranno creati un *Deployment* e un *Service*, avviando il comando
+Per avviare il cluster saranno creati due *Deployment* e due *Service*, eseguendo il comando
 ```bash
 kubectl apply -f deploy.yaml
 ```
 \
-Per fermare il cluster sarà necessario stoppare i due servizi tramite il comando
+Per fermare il cluster sarà necessario stoppare i servizi tramite i comandi
 ```bash
-kubectl delete service solver-pod-service
-kubectl delete deployment solver-pod
+kubectl delete service multi-solver-service
+kubectl delete deployment solver-deployment
+kubectl delete service server-service
+kubectl delete deployment server-pod
 ```
 Oppure pià semplicemente con
 ```bash
@@ -68,6 +82,6 @@ kubectl delete -f deploy.yaml
 Per scalare il numero di repliche eseguire il comando
 ```bash
 kubectl scale --replicas=2 multi-solver-app
-kubectl scale deployment solver-pod --replicas=0
+kubectl scale deployment solver-deployment --replicas=0
 ```
 
