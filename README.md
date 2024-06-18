@@ -22,7 +22,7 @@ Oltre ai risolutori, viene avviato anche l'immagine del server.\
 In base alla domanda, possono essere aggiunti altri container dinamicamente per gestire un carico di lavoro crescente, garantendo così che le risorse siano utilizzate in modo efficiente e che i tempi di risposta rimangano ottimali.
 
 ### Interfaccia di test
-Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku.
+Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku. Il server HTTP è lo stesso del backend, quindi nel container del server. Sarà sufficiente collegarsi al container per visualizzarlo.
 
 ---
 
