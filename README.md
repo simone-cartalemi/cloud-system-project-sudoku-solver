@@ -4,7 +4,7 @@
 Il Sudoku è un popolare rompicapo che ha avuto origine in Giappone. Il gioco consiste in una griglia di $9 \times 9$ celle, suddivisa in $9$ blocchi di $3 \times 3$. L'obiettivo è riempire tutte le celle della griglia con numeri da $1$ a $9$, seguendo specifiche regole: ogni numero deve apparire una sola volta in ogni riga, colonna e blocco $3 \times 3$. Nonostante le regole semplici, alcuni puzzle possono essere estremamente complessi e la loro soluzione richiede strategie sofisticate e meticolose.
 
 ### La soluzione proposta: Tabu Search
-Tabu Search è una tecnica meta-euristica usato per risolvere problemi di ottimizzazione, tra cui problemi di scheduling e routing, problemi su grafi e programmazione intera. Questo metodo si basa sull'esplorazione dello spazio delle soluzioni, evitando il ritorno a soluzioni già esplorate marcandole come "tabù". Nella soluzione del Sudoku, Tabu Search può essere particolarmente efficace per superare i minimi locali, un punto comune dove altri algoritmi si blocchano, permettendo di esplorare nuove possibilità nonostante alcune mosse siano temporaneamente proibite.
+Tabu Search è una tecnica meta-euristica usato per risolvere problemi di ottimizzazione, tra cui problemi di scheduling e routing, problemi su grafi e programmazione intera. Questo metodo si basa sull'esplorazione dello spazio delle soluzioni, evitando il ritorno a soluzioni già esplorate marcandole come "tabù". Nella soluzione del Sudoku, Tabu Search può essere particolarmente efficace per superare i minimi locali, un punto comune dove altri algoritmi si bloccano, permettendo di esplorare nuove possibilità nonostante alcune mosse siano temporaneamente proibite.
 
 
 ## Architettura del progetto
@@ -40,50 +40,50 @@ Il progetto è stato configurato per funzionare esclusivamente su sistemi operat
 #### Costruzione delle immagini Docker
 Bisogna fare la build di tre immagini, di cui due per il risolutore e una per il server:
 1. Immagine di **Linux Alpine**
-```bash
+```sh
 docker build -t gcc-alpine:v1.1 ./gcc-alpine-image/
 ```
 2. Immagine del risolutore
-```bash
+```sh
 docker build -t sudoku-solver:v1.0 ./sudoku-solver-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
-```bash
+```sh
 docker run -it --rm --name solver -p 1632:1632 sudoku-solver:v1.0
 ```
 
 3. Immagine del server:
-```bash
+```sh
 docker build -t solver-server:v1.1 ./solver-server-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
-```bash
+```sh
 docker run -it --rm --name server -p 80:80 -p 3264:3264 solver-server:v1.1
 ```
 
 #### Distribuzione su Kubernetes
 
 Per avviare il cluster saranno creati due *Deployment* e due *Service*, eseguendo il comando
-```bash
+```sh
 kubectl apply -f deploy.yaml
 ```
 \
 Per fermare il cluster sarà necessario stoppare i servizi tramite i comandi
-```bash
+```sh
 kubectl delete service multi-solver-service
 kubectl delete deployment solver-deployment
 kubectl delete service server-service
 kubectl delete deployment server-pod
 ```
 Oppure pià semplicemente con
-```bash
+```sh
 kubectl delete -f deploy.yaml
 ```
 \
 Per scalare il numero di repliche eseguire il comando
-```bash
+```sh
 kubectl scale --replicas=2 multi-solver-app
 kubectl scale deployment solver-deployment --replicas=0
 ```

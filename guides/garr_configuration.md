@@ -3,7 +3,7 @@
 In questa guida, ci concentreremo sull'installazione di Minikube su una macchina Ubuntu e di un cluster funzionante.
 
 > La macchina remota era utilizzabile mediante accesso SSH, quindi se necessario creare le chiavi per la connessione e poi connettersi tramite comando
-> ```bash
+> ```sh
 > ssh <user_remoto>@<ip_remoto> -i <path_della_chiave_pem> -L 80:localhost:80
 > ```
 > questo comando crea inoltre un tunneling tra la macchina locale e quella remota.
@@ -21,27 +21,27 @@ In questa guida, ci concentreremo sull'installazione di Minikube su una macchina
 ## Installazione di Docker
 
 1. Aggiornare i pacchetti di Ubuntu
-```bash
+```sh
 sudo apt update & sudo apt upgrade
 ```
 
 2. Installare "curl"
-```bash
+```sh
 sudo apt install -y curl wget apt-transport-https
 ```
 
 3. Installare Docker
-```bash
+```sh
 sudo apt install docker.io
 ```
 
 4. Installare servizi Docker
-```bash
+```sh
 sudo systemctl enable docker
 sudo systemctl start docker
 ```
 Per verificare il corretto funzionamento di Docker digitare
-```bash
+```sh
 docker --version
 ```
 e otterremo un output simile a questo
@@ -49,7 +49,7 @@ e otterremo un output simile a questo
 Docker version 20.10.21, build 20.10.21-0ubuntu1~20.04.2
 ```
 un'ulteriore prova di funzionamento può essere fatta scaricando l'immagine ufficiale di Hello World
-```bash
+```sh
 docker run hello-world
 ```
 
@@ -62,16 +62,16 @@ Ulteriori dettagli [qui](https://medium.com/@areesmoon/installing-docker-on-ubun
 
 
 1. Scaricare il file binario di Minikube
-```bash
+```sh
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 ```
 
 2. Installare il file scaricato
-```bash
+```sh
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 e verifichiamo il funzionamento tramite il comando
-```bash
+```sh
 minikube version
 ```
 e otterremo un output simile a questo
@@ -81,19 +81,19 @@ commit: 8220a6eb95f0a4d75f7f2d7b14cef975f050512d
 ```
 
 3. Scaricare l'ultima versione stabile di Kubectl
-```bash
+```sh
 VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 curl -LO "https://storage.googleapis.com/kubernetes-release/release/${VERSION}/bin/linux/amd64/kubectl"
 
 ```
 
 4. Installare il file binario scaricato
-```bash
+```sh
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
 ```
 e verifichiamo il funzionamento tramite il comando
-```bash
+```sh
 kubectl version -o yaml
 ```
 l'output dovrebbe essere simile a questo
@@ -122,11 +122,11 @@ serverVersion:
 ```
 
 5. Avviare Minikube
-```bash
+```sh
 minikube start --driver=docker
 ```
 per verificare lo stato dopo la fine dell'esecuzione del comando digitare
-```bash
+```sh
 minikube status
 ```
 si dovrebbe avere un output simile a questo
@@ -143,8 +143,8 @@ Ulteriori dettagli [qui](https://medium.com/@areesmoon/installing-minikube-on-ub
 
 Così abbiamo concluso la configurazione del nostro nodo.
 
-[!WARNING] **Prima di buildare le immagini di Docker**: è necessario eseguire questo comando per configurare la shell corrente in modo che possa utilizzare il daemon Docker all'interno di Minikube. Questo permette di costruire e gestire le immagini Docker direttamente all'interno del contesto di Minikube senza doverle pushare su un registry Docker esterno.
-```bash
+⚠️ **Prima di buildare le immagini di Docker**: è necessario eseguire questo comando per configurare la shell corrente in modo che possa utilizzare il daemon Docker all'interno di Minikube. Questo permette di costruire e gestire le immagini Docker direttamente all'interno del contesto di Minikube senza doverle pushare su un registry Docker esterno.
+```sh
 eval $(minikube docker-env)
 ```
 Questo eviterà di riscontrare problemi con la visibilità delle immagini Docker costruite localmente.
