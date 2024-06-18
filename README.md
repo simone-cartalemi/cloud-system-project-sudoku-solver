@@ -52,12 +52,12 @@ docker run -it --rm --name solver -p 1632:1632 sudoku-solver:v1.0
 
 3. Immagine del server:
 ```bash
-docker build -t solver-server:v1.0 ./solver-server-image/
+docker build -t solver-server:v1.1 ./solver-server-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
 ```bash
-docker run -it --rm --name server -p 3264:3264 solver-server:v1.0
+docker run -it --rm --name server -p 80:80 -p 3264:3264 solver-server:v1.1
 ```
 
 #### Distribuzione su Kubernetes
