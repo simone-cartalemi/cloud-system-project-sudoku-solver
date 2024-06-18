@@ -27,12 +27,15 @@ Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku. Il 
 ---
 
 ## Build e Esecuzione dei Container
-Il progetto è stato configurato per funzionare esclusivamente su sistemi operativi Linux. Di seguito, sono riportati i passaggi per costruire e eseguire i container.
+Il progetto è stato configurato per funzionare esclusivamente su sistemi operativi Linux, o Windows con WSL. Di seguito, sono riportati i passaggi per costruire e eseguire i container.
+
+> Una guida per implementarlo su macchina hostata da server GARR (tramite OpenStack Dashboard) è disponibile in [guides/garr_configuration.md](guides/garr_configuration.md) Seguire questa guida di preparazione all'ambiente prima di passare al deploy del progetto.
 
 #### Prerequisiti
 - Docker
 - Kubernetes (Minikube o un cluster configurato)
-- kubectl configurato per comunicare con il cluster Kubernetes
+- Kubectl configurato per comunicare con il cluster Kubernetes
+- Repository clonata in locale
 
 #### Costruzione delle immagini Docker
 Bisogna fare la build di tre immagini, di cui due per il risolutore e una per il server:
