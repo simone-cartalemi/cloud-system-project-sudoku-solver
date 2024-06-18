@@ -77,7 +77,7 @@ kubectl delete deployment solver-deployment
 kubectl delete service server-service
 kubectl delete deployment server-pod
 ```
-Oppure pià semplicemente con
+Oppure più semplicemente con
 ```sh
 kubectl delete -f deploy.yaml
 ```
