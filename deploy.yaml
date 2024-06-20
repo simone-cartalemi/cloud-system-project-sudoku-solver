@@ -30,6 +30,7 @@ spec:
     - protocol: TCP
       port: 1632
       targetPort: 1632
+      name: solver
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -48,6 +49,11 @@ spec:
       containers:
       - name: server
         image: solver-server:v1.1
+        ports:
+        - containerPort: 3264
+          name: websocket-port
+        - containerPort: 80
+          name: http-port
 ---
 apiVersion: v1
 kind: Service
