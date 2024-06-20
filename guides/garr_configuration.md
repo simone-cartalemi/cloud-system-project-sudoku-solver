@@ -143,6 +143,33 @@ Ulteriori dettagli [qui](https://medium.com/@areesmoon/installing-minikube-on-ub
 
 Così abbiamo concluso la configurazione del nostro nodo.
 
+---
+
+## Note importanti
+
+ℹ️ **Minicube e il LoadBalancer**: i servizi di tipo *LoadBalancer* sono servizi in ambienti di produzione, quindi Minikube ha bisogno di un meccanismo per emulare questo comportamento. Eseguendo il comando
+```sh
+minikube tunnel
+```
+sarà creato un tunnel di rete che permette ai servizi LoadBalancer di ottenere un indirizzo IP esterno che è raggiungibile dalla rete locale.
+Dopo averlo eseguito otterremo un output simile al seguente:
+```
+Status:
+        machine: minikube
+        pid: 2762457
+        route: 10.96.0.0/12 -> 192.168.67.2
+        minikube: Running
+        services: [server-service]
+    errors:
+                minikube: no errors
+                router: no errors
+                loadbalancer emulator: no errors
+```
+In questo caso l'indirizzo assegnato al servizio sarà `192.168.67.2`
+
+
+
+
 ⚠️ **Prima di buildare le immagini di Docker**: è necessario eseguire questo comando per configurare la shell corrente in modo che possa utilizzare il daemon Docker all'interno di Minikube. Questo permette di costruire e gestire le immagini Docker direttamente all'interno del contesto di Minikube senza doverle pushare su un registry Docker esterno.
 ```sh
 eval $(minikube docker-env)
