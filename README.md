@@ -4,7 +4,7 @@
 Il Sudoku è un popolare rompicapo che ha avuto origine in Giappone. Il gioco consiste in una griglia di $9 \times 9$ celle, suddivisa in $9$ blocchi di $3 \times 3$. L'obiettivo è riempire tutte le celle della griglia con numeri da $1$ a $9$, seguendo specifiche regole: ogni numero deve apparire una sola volta in ogni riga, colonna e blocco $3 \times 3$. Nonostante le regole semplici, alcuni puzzle possono essere estremamente complessi e la loro soluzione richiede strategie sofisticate e meticolose.
 
 ### La soluzione proposta: Tabu Search
-Tabu Search è una tecnica meta-euristica usato per risolvere problemi di ottimizzazione, tra cui problemi di scheduling e routing, problemi su grafi e programmazione intera. Questo metodo si basa sull'esplorazione dello spazio delle soluzioni, evitando il ritorno a soluzioni già esplorate marcandole come "tabù". Nella soluzione del Sudoku, Tabu Search può essere particolarmente efficace per superare i minimi locali, un punto comune dove altri algoritmi si blocchano, permettendo di esplorare nuove possibilità nonostante alcune mosse siano temporaneamente proibite.
+Tabu Search è una tecnica meta-euristica usato per risolvere problemi di ottimizzazione, tra cui problemi di scheduling e routing, problemi su grafi e programmazione intera. Questo metodo si basa sull'esplorazione dello spazio delle soluzioni, evitando il ritorno a soluzioni già esplorate marcandole come "tabù". Nella soluzione del Sudoku, Tabu Search può essere particolarmente efficace per superare i minimi locali, un punto comune dove altri algoritmi si bloccano, permettendo di esplorare nuove possibilità nonostante alcune mosse siano temporaneamente proibite.
 
 
 ## Architettura del progetto
@@ -22,65 +22,68 @@ Oltre ai risolutori, viene avviato anche l'immagine del server.\
 In base alla domanda, possono essere aggiunti altri container dinamicamente per gestire un carico di lavoro crescente, garantendo così che le risorse siano utilizzate in modo efficiente e che i tempi di risposta rimangano ottimali.
 
 ### Interfaccia di test
-Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku.
+Una semplice interfaccia web visualizzerà e mostrerà la tavola del sudoku. Il server HTTP è lo stesso del backend, quindi nel container del server. Sarà sufficiente collegarsi al container per visualizzarlo.
 
 ---
 
 ## Build e Esecuzione dei Container
-Il progetto è stato configurato per funzionare esclusivamente su sistemi operativi Linux. Di seguito, sono riportati i passaggi per costruire e eseguire i container.
+Il progetto è stato configurato per funzionare esclusivamente su sistemi operativi Linux, o Windows con WSL. Di seguito, sono riportati i passaggi per costruire e eseguire i container.
+
+> Una guida per implementarlo su macchina hostata da server GARR (tramite OpenStack Dashboard) è disponibile in [guides/garr_configuration.md](guides/garr_configuration.md) Seguire questa guida di preparazione all'ambiente prima di passare al deploy del progetto.
 
 #### Prerequisiti
 - Docker
 - Kubernetes (Minikube o un cluster configurato)
-- kubectl configurato per comunicare con il cluster Kubernetes
+- Kubectl configurato per comunicare con il cluster Kubernetes
+- Repository clonata in locale
 
 #### Costruzione delle immagini Docker
 Bisogna fare la build di tre immagini, di cui due per il risolutore e una per il server:
 1. Immagine di **Linux Alpine**
-```bash
+```sh
 docker build -t gcc-alpine:v1.1 ./gcc-alpine-image/
 ```
 2. Immagine del risolutore
-```bash
+```sh
 docker build -t sudoku-solver:v1.0 ./sudoku-solver-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
-```bash
-docker run -it --name solver -p 1632:1632 sudoku-solver:v1.0
+```sh
+docker run -it --rm --name solver -p 1632:1632 sudoku-solver:v1.0
 ```
 
 3. Immagine del server:
-```bash
-docker build -t solver-server:v1.0 .\solver-server-image\
+```sh
+docker build -t solver-server:v1.1 ./solver-server-image/
 ```
 
 Per testare eventualmente l'immagine eseguire il comando
-```bash
-docker run -it --name server -p 3264:3264 solver-server:v1.0
+```sh
+docker run -it --rm --name server -p 80:80 -p 3264:3264 solver-server:v1.1
 ```
 
 #### Distribuzione su Kubernetes
 
 Per avviare il cluster saranno creati due *Deployment* e due *Service*, eseguendo il comando
-```bash
+```sh
 kubectl apply -f deploy.yaml
 ```
 \
 Per fermare il cluster sarà necessario stoppare i servizi tramite i comandi
-```bash
+```sh
 kubectl delete service multi-solver-service
 kubectl delete deployment solver-deployment
 kubectl delete service server-service
 kubectl delete deployment server-pod
 ```
-Oppure pià semplicemente con
-```bash
+Oppure più semplicemente con
+```sh
 kubectl delete -f deploy.yaml
 ```
 \
 Per scalare il numero di repliche eseguire il comando
-```bash
+```sh
 kubectl scale --replicas=2 multi-solver-app
 kubectl scale deployment solver-deployment --replicas=0
 ```
