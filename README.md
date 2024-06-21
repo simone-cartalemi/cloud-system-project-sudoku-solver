@@ -88,3 +88,4 @@ kubectl scale --replicas=2 multi-solver-app
 kubectl scale deployment solver-deployment --replicas=0
 ```
 
+> La relazione finale del progetto, valida anche come documentazione, è disponibile all'interno della cartella [guides/](guides/SC_Cartalemi_Deployed_TS_Sudoku%20-%20relazione.pdf).
